@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="Parth Kakadiya – Softwareentwickler">
+<meta property="og:description" content="PHP-Backend, REST-APIs und sichere Webanwendungen. Erfurt.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316211D'/%3E%3Ctext x='16' y='21.5' font-family='Arial' font-weight='700' font-size='14' fill='%23F3F5F2' text-anchor='middle'%3EPK%3C/text%3E%3C/svg%3E">
+<title>Parth Kakadiya</title>
+<meta name="description" content="Parth Kakadiya – Softwareentwickler (PHP, REST APIs, MySQL) aus Erfurt.">
+<style>
+@font-face { font-family: "Schibsted Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/fonts/schibsted-grotesk-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Schibsted Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("assets/fonts/schibsted-grotesk-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Schibsted Grotesk"; font-style: normal; font-weight: 800; font-display: swap; src: url("assets/fonts/schibsted-grotesk-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("assets/fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); }
+/* Layout: a two-column "profile sheet" — sticky fact column (Kurzprofil) on the left,
+   work and projects on the right, like a German Lebenslauf read as a code review. */
+:root {
+  --bg: #F3F5F2;
+  --surface: #FFFFFF;
+  --ink: #16211D;
+  --muted: #5A6862;
+  --line: #D9DFDA;
+  --accent: #0E5E58;
+  --accent-soft: #E1EEEA;
+  --amber: #8A5A0B;
+  --amber-soft: #F6ECD8;
+  --font-display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1513; --surface: #161E1B; --ink: #E6ECE8; --muted: #9AA8A1; --line: #2A3531;
+    --accent: #5CC3B5; --accent-soft: #173430; --amber: #E2B15A; --amber-soft: #352A15;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1513; --surface: #161E1B; --ink: #E6ECE8; --muted: #9AA8A1; --line: #2A3531;
+  --accent: #5CC3B5; --accent-soft: #173430; --amber: #E2B15A; --amber-soft: #352A15;
+  color-scheme: dark;
+}
+
+/* Language switch: German is the default, English shows when data-lang="en". */
+:root:not([data-lang="en"]) .en { display: none !important; }
+:root[data-lang="en"] .de { display: none !important; }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Top bar */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.mark { font-family: var(--font-mono); font-size: 14px; color: var(--muted); text-decoration: none; }
+.mark b { color: var(--ink); font-weight: 500; }
+.nav { display: flex; gap: 20px; align-items: center; }
+.nav a.link { color: var(--muted); text-decoration: none; font-size: 14px; }
+.nav a.link:hover { color: var(--ink); }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--surface); }
+.lang button { font: 500 12px/1 var(--font-mono); border: 0; background: transparent; color: var(--muted); padding: 6px 10px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* Hero */
+.hero { padding-block: 64px 40px; }
+.hero-text { display: grid; gap: 28px; min-width: 0; }
+.eyebrow { font: 500 13px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.hero h1 { font-size: clamp(40px, 7vw, 76px); font-weight: 800; letter-spacing: -0.03em; }
+.hero h1 span.role { display: block; color: var(--muted); font-weight: 500; font-size: .48em; letter-spacing: -0.01em; margin-top: 10px; }
+.lede { font-size: 19px; max-width: 62ch; color: var(--ink); margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--font-body); padding: 13px 18px; border-radius: 8px; text-decoration: none; border: 1px solid var(--ink); cursor: pointer; }
+.btn.primary { background: var(--ink); color: var(--bg); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:hover { transform: translateY(-1px); }
+
+/* Proof strip: real numbers from the TUM work */
+.proof { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.proof div { padding: 22px 18px 20px 0; display: grid; gap: 4px; }
+.proof div + div { padding-left: 18px; border-left: 1px solid var(--line); }
+.proof strong { font: 700 34px/1 var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.proof span { font-size: 14px; color: var(--muted); }
+
+/* Main grid */
+.sheet { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 56px; padding-block: 56px 72px; align-items: start; }
+.facts { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); display: grid; gap: 22px; }
+.facts h2 { font-size: 13px; font-family: var(--font-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.facts dl { margin: 0; display: grid; gap: 14px; }
+.facts dt { font: 500 12px/1.2 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.facts dd { margin: 3px 0 0; font-weight: 500; }
+.avail { display: inline-flex; align-items: center; gap: 8px; }
+.avail::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+
+main { display: grid; gap: 64px; min-width: 0; }
+section > header { display: grid; gap: 6px; margin-bottom: 24px; }
+section > header h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+section > header p { margin: 0; color: var(--muted); max-width: 62ch; }
+
+/* Experience */
+.job { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 24px; padding-block: 22px; border-top: 1px solid var(--line); }
+.job:last-child { border-bottom: 1px solid var(--line); }
+.when { font: 400 14px/1.5 var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.job h3 { font-size: 20px; font-weight: 700; }
+.job .org { color: var(--muted); margin: 2px 0 12px; }
+.job ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+.job li::marker { color: var(--accent); }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; }
+.skillrow { padding-block: 16px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.skillrow h3 { font: 500 13px/1.2 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 14px/1 var(--font-body); padding: 7px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); }
+.chip.core { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); margin-top: 14px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+
+/* AI-assisted development */
+.ai { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 28px; display: grid; gap: 22px; }
+.ai-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+.ai-grid h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.ai-grid p { margin: 0; color: var(--muted); font-size: 15px; }
+.term { font: 400 13.5px/1.7 var(--font-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: pre; color: var(--muted); }
+.term b { color: var(--accent); font-weight: 500; }
+.term em { font-style: normal; color: var(--ink); }
+
+/* Projects */
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.proj h3 { font-size: 18px; font-weight: 700; }
+.proj p { margin: 0; font-size: 15px; color: var(--muted); }
+.stack { font: 400 13px/1.5 var(--font-mono); color: var(--muted); }
+.status { justify-self: start; font: 500 12px/1 var(--font-mono); padding: 5px 8px; border-radius: 4px; }
+.status.live { background: var(--accent-soft); color: var(--accent); }
+.status.wip { background: var(--amber-soft); color: var(--amber); }
+.proj a.repo { font-size: 14px; font-weight: 600; text-decoration: none; }
+.proj a.repo:hover { text-decoration: underline; }
+.subhead { font: 500 13px/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 28px 0 14px; }
+
+/* Education */
+.edu { display: grid; gap: 0; }
+.edu .job { grid-template-columns: 130px minmax(0, 1fr); }
+.thesis { font-style: italic; color: var(--ink); }
+
+/* Contact */
+.contact { border-top: 1px solid var(--line); padding-block: 56px 72px; }
+.contact .wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; }
+.contact h2 { font-size: clamp(30px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; }
+.contact p { color: var(--muted); max-width: 52ch; margin: 12px 0 0; }
+.mailbox { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mailbox code { font: 500 16px/1 var(--font-mono); padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); user-select: all; }
+.links { display: flex; gap: 18px; margin-top: 14px; font-weight: 600; flex-wrap: wrap; }
+footer { font-size: 13px; color: var(--muted); padding-block: 20px; border-top: 1px solid var(--line); }
+
+@media (max-width: 900px) {
+  .sheet { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .facts { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts dl { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts h2 { grid-column: 1 / -1; }
+  .nav a.link { display: none; }
+}
+@media (max-width: 640px) {
+  .hero { padding-block: 40px 28px; }
+  .proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proof div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .proof div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .job, .edu .job { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .skills, .ai-grid, .projects { grid-template-columns: minmax(0, 1fr); }
+  .facts dl { grid-template-columns: minmax(0, 1fr); }
+  .ai { padding: 20px; }
+  .contact .wrap { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform .15s ease; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <a class="mark" href="#top"><b>parth</b>.kakadiya</a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="link" href="#experience"><span class="de">Erfahrung</span><span class="en">Experience</span></a>
+      <a class="link" href="#skills">Skills</a>
+      <a class="link" href="#projects"><span class="de">Projekte</span><span class="en">Projects</span></a>
+      <a class="link" href="#contact"><span class="de">Kontakt</span><span class="en">Contact</span></a>
+      <div class="lang" role="group" aria-label="Sprache / Language">
+        <button type="button" id="lang-de" data-set-lang="de" aria-pressed="true">DE</button>
+        <button type="button" id="lang-en" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap" id="top">
+  <section class="hero">
+    <div class="hero-text">
+    <div class="eyebrow"><span class="de">Softwareentwickler · Erfurt</span><span class="en">Software Developer · Erfurt, Germany</span></div>
+    <h1>Parth Kakadiya
+      <span class="role"><span class="de">PHP-Backend, REST-APIs und sichere Webanwendungen</span><span class="en">PHP back-end, REST APIs and secure web applications</span></span>
+    </h1>
+    <p class="lede">
+      <span class="de">Ich entwickle Webanwendungen, die zuverlässig laufen und gut wartbar bleiben. Aktuell arbeite ich an der TU München am Verwaltungsportal der Universität: Schnittstellen, Sicherheit, Tests und die Modernisierung von Legacy-Code.</span>
+      <span class="en">I build web applications that run reliably and stay easy to maintain. At the Technical University of Munich I work on the university's administration portal: API integrations, security, testing and modernizing legacy code.</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="#contact"><span class="de">Kontakt aufnehmen</span><span class="en">Get in touch</span></a>
+      <a class="btn ghost" href="https://github.com/parth1320" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn ghost" href="https://linkedin.com/in/parth--kakadiya" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    </div>
+  </section>
+
+  <div class="proof" aria-label="Ergebnisse">
+    <div><strong>~380</strong><span class="de">SQL-Aufrufe auf Prepared Statements umgestellt</span><span class="en">SQL calls moved to prepared statements</span></div>
+    <div><strong>178</strong><span class="de">Unit-Tests für refaktorierte Module</span><span class="en">unit tests for refactored modules</span></div>
+    <div><strong>Level 9</strong><span class="de">PHPStan ohne Fehler im Core</span><span class="en">PHPStan, zero errors in core</span></div>
+    <div><strong>50+</strong><span class="de">Dateien nutzen meine Tabellenkomponente</span><span class="en">files use my data-table component</span></div>
+  </div>
+
+  <div class="sheet">
+    <aside class="facts">
+      <h2><span class="de">Kurzprofil</span><span class="en">At a glance</span></h2>
+      <dl>
+        <div><dt><span class="de">Standort</span><span class="en">Location</span></dt><dd>Erfurt, Thüringen</dd></div>
+        <div><dt><span class="de">Gesucht</span><span class="en">Looking for</span></dt><dd class="avail"><span class="de">Vollzeit, ab sofort</span><span class="en">Full-time, available now</span></dd></div>
+        <div><dt><span class="de">Schwerpunkt</span><span class="en">Focus</span></dt><dd>PHP 8 · MySQL · REST APIs</dd></div>
+        <div><dt><span class="de">Aufenthalt</span><span class="en">Work permit</span></dt><dd><span class="de">Aufenthaltserlaubnis zum Studium (§ 16b AufenthG). Nach dem Abschluss ist der Wechsel zur Blauen Karte EU direkt in Deutschland möglich.</span><span class="en">Student residence permit (§ 16b AufenthG). After graduating I can switch to an EU Blue Card directly in Germany.</span></dd></div>
+        <div><dt><span class="de">Sprachen</span><span class="en">Languages</span></dt><dd><span class="de">Englisch C1 · Deutsch B1</span><span class="en">English C1 · German B1</span></dd></div>
+        <div><dt><span class="de">Studium</span><span class="en">Degree</span></dt><dd><span class="de">M.Sc. Web Engineering, TU Chemnitz</span><span class="en">M.Sc. Web Engineering, TU Chemnitz</span></dd></div>
+        <div><dt><span class="de">Erfahrung</span><span class="en">Experience</span></dt><dd><span class="de">TU München · Agile Infoways</span><span class="en">TU Munich · Agile Infoways</span></dd></div>
+      </dl>
+    </aside>
+
+    <main>
+      <section id="experience">
+        <header>
+          <h2><span class="de">Berufserfahrung</span><span class="en">Experience</span></h2>
+        </header>
+        <article class="job">
+          <div class="when">11/2024 –<br><span class="de">heute</span><span class="en">present</span></div>
+          <div>
+            <h3><span class="de">Softwareentwickler (studentische Hilfskraft)</span><span class="en">Software Developer (Student Assistant)</span></h3>
+            <p class="org"><span class="de">Technische Universität München · München</span><span class="en">Technical University of Munich · Munich</span></p>
+            <ul>
+              <li><span class="de">Weiterentwicklung von Koinon, dem internen Verwaltungsportal der TUM (Abschlussarbeiten, Lehrdeputate, Modulverwaltung, Zeiterfassung) mit PHP 8 und MySQL.</span><span class="en">Develop Koinon, TUM's internal administration portal (theses, teaching loads, module management, time tracking), in PHP 8 and MySQL.</span></li>
+              <li><span class="de">Anbindung des Campus-Management-Systems über OAuth2-REST-APIs: geplante Sync-Jobs, Token-Caching, Request-Drosselung, Exponential Backoff und fortsetzbare Läufe. API-Aufrufe durch Zusammenlegen zweier Abrufe halbiert.</span><span class="en">Integrated the campus management system via OAuth2 REST APIs: scheduled sync jobs, token caching, request pacing, exponential backoff and resumable runs. Halved API calls by merging two fetchers.</span></li>
+              <li><span class="de">Sicherheit verbessert: rund 380 SQL-Aufrufe in 57 Dateien auf Prepared Statements umgestellt, CSRF-Schutz und serverseitige Zugriffsprüfungen ergänzt.</span><span class="en">Hardened security: moved about 380 raw SQL calls in 57 files to prepared statements, added CSRF protection and server-side access checks.</span></li>
+              <li><span class="de">Legacy-Module und 8 Cronjobs in typisierte, testbare Controller-, Service- und Model-Schichten umgebaut (DTOs, Enums). 178 Unit-Tests, PHPStan Level 9 ohne Fehler im Core.</span><span class="en">Refactored legacy modules and 8 scheduled jobs into typed, testable controller, service and model layers (DTOs, enums). 178 unit tests, zero PHPStan level-9 errors in core.</span></li>
+              <li><span class="de">Wiederverwendbare Tabellenkomponente (Pagination, Sortierung, sicheres Escaping) gebaut, heute in über 50 Dateien im Einsatz.</span><span class="en">Built a reusable data-table component (pagination, sorting, safe output escaping), now used in more than 50 files.</span></li>
+              <li><span class="de">Features für Zeiterfassung und Lehrdeputate: Überstundenkonten, rollenbasierte Filter sowie Excel-Import und -Export.</span><span class="en">Delivered time-tracking and teaching-load features: overtime balances, role-scoped filtering and Excel import/export.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="job">
+          <div class="when">04/2020 –<br>09/2021</div>
+          <div>
+            <h3>Junior Full-Stack Developer</h3>
+            <p class="org">Agile Infoways · Ahmedabad, <span class="de">Indien</span><span class="en">India</span></p>
+            <ul>
+              <li><span class="de">Backends und REST-APIs für interne Anwendungen mit Node.js, Express.js, MongoDB und MySQL.</span><span class="en">Built back-ends and REST APIs for internal applications with Node.js, Express.js, MongoDB and MySQL.</span></li>
+              <li><span class="de">Wiederverwendbare React-Komponenten und responsive Oberflächen mit TypeScript und Tailwind CSS.</span><span class="en">Built reusable React components and responsive interfaces with TypeScript and Tailwind CSS.</span></li>
+              <li><span class="de">APIs mit Postman getestet und dokumentiert, Zusammenarbeit über Git-Workflows.</span><span class="en">Tested and documented APIs with Postman; collaborated through Git-based workflows.</span></li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section id="skills">
+        <header>
+          <h2>Skills</h2>
+          <p><span class="de">Hervorgehoben ist, womit ich täglich arbeite. Der Rest ist aus Projekten und früheren Jobs.</span><span class="en">Highlighted skills are what I use every day. The rest comes from projects and earlier jobs.</span></p>
+        </header>
+        <div class="skills">
+          <div class="skillrow"><h3>Backend</h3><div class="chips">
+            <span class="chip core">PHP 8 (OOP, MVC)</span><span class="chip core">REST APIs</span><span class="chip core">OAuth2</span><span class="chip">Node.js</span><span class="chip">Express.js</span><span class="chip">Laravel</span><span class="chip">Python</span><span class="chip">Java</span>
+          </div></div>
+          <div class="skillrow"><h3><span class="de">Datenbanken</span><span class="en">Databases</span></h3><div class="chips">
+            <span class="chip core">MySQL</span><span class="chip core">SQL</span><span class="chip core"><span class="de">Migrationen (Phinx)</span><span class="en">Migrations (Phinx)</span></span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span>
+          </div></div>
+          <div class="skillrow"><h3>Frontend</h3><div class="chips">
+            <span class="chip core">JavaScript</span><span class="chip core">HTML5 / CSS3</span><span class="chip core">Bootstrap</span><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Redux</span><span class="chip">Tailwind CSS</span><span class="chip">jQuery</span>
+          </div></div>
+          <div class="skillrow"><h3><span class="de">Qualität & Tests</span><span class="en">Quality & testing</span></h3><div class="chips">
+            <span class="chip core">PHPUnit</span><span class="chip core">Codeception</span><span class="chip core">PHPStan (Level 9)</span><span class="chip core">php-cs-fixer</span><span class="chip">Postman</span>
+          </div></div>
+          <div class="skillrow"><h3><span class="de">Sicherheit</span><span class="en">Security</span></h3><div class="chips">
+            <span class="chip core">Prepared Statements</span><span class="chip core"><span class="de">CSRF-Schutz</span><span class="en">CSRF protection</span></span><span class="chip core"><span class="de">XSS-Escaping</span><span class="en">XSS escaping</span></span><span class="chip core"><span class="de">Zugriffsprüfungen</span><span class="en">Access checks</span></span>
+          </div></div>
+          <div class="skillrow"><h3>DevOps & Tools</h3><div class="chips">
+            <span class="chip core">Docker</span><span class="chip core">Git</span><span class="chip core">GitLab CI</span><span class="chip core">Apache</span><span class="chip">Sentry</span>
+          </div></div>
+        </div>
+        <div class="legend">
+          <span><i style="background: var(--accent-soft)"></i><span class="de">täglich im Einsatz</span><span class="en">used daily</span></span>
+          <span><i style="background: var(--surface); border: 1px solid var(--line)"></i><span class="de">aus Projekten und früheren Jobs</span><span class="en">from projects and earlier jobs</span></span>
+        </div>
+      </section>
+
+      <section id="ai">
+        <header>
+          <h2><span class="de">KI-gestützte Entwicklung</span><span class="en">AI-assisted development</span></h2>
+          <p><span class="de">Ich nutze Claude Code im Arbeitsalltag, um schneller zu liefern, ohne bei der Qualität nachzulassen. Die KI macht Vorschläge, die Verantwortung für den Code bleibt bei mir.</span><span class="en">I use Claude Code in my daily work to ship faster without lowering quality. The AI makes suggestions, and I stay responsible for the code.</span></p>
+        </header>
+        <div class="ai">
+          <div class="ai-grid">
+            <div>
+              <h3><span class="de">Projektregeln für die KI</span><span class="en">Project rules for the AI</span></h3>
+              <p><span class="de">Arbeit mit einer CLAUDE.md, die Architektur, Sicherheitsregeln und Konventionen eines großen PHP-Projekts festhält, damit die KI im Stil des Teams arbeitet.</span><span class="en">Working with a CLAUDE.md that captures the architecture, security rules and conventions of a large PHP project, so the AI follows the team's style.</span></p>
+            </div>
+            <div>
+              <h3><span class="de">Skills und Sub-Agents</span><span class="en">Skills and sub-agents</span></h3>
+              <p><span class="de">Wiederkehrende Aufgaben laufen über eigene Befehle: PHPStan-Fehler beheben, Sicherheitsreview, Datenbank-Migrationen und ein Review vor dem Merge Request.</span><span class="en">Recurring tasks run through dedicated commands: fixing PHPStan errors, security review, database migrations and a review before each merge request.</span></p>
+            </div>
+            <div>
+              <h3><span class="de">Tool-Anbindung über MCP</span><span class="en">Tool integrations via MCP</span></h3>
+              <p><span class="de">Claude ist mit GitLab, dem Browser und Figma verbunden, um Issues zu lesen, Oberflächen zu prüfen und Designs umzusetzen.</span><span class="en">Claude is connected to GitLab, the browser and Figma to read issues, check UIs and implement designs.</span></p>
+            </div>
+            <div>
+              <h3><span class="de">Geprüft, nicht blind übernommen</span><span class="en">Reviewed, never blindly accepted</span></h3>
+              <p><span class="de">Jede Änderung geht durch Tests, statische Analyse und mein eigenes Code-Review, bevor sie ins Team geht.</span><span class="en">Every change goes through tests, static analysis and my own code review before it reaches the team.</span></p>
+            </div>
+          </div>
+<div class="term" aria-label="Beispiel-Workflow / example workflow"><b>&gt;</b> <em>/fix-phpstan src/time_tracking</em>
+  <span class="de">Fehler analysieren, Typen ergänzen, Tests laufen lassen</span><span class="en">analyse errors, add types, run tests</span>
+<b>&gt;</b> <em>/pre-mr-check</em>
+  <span class="de">Sicherheit, Code-Stil und PHPStan prüfen, bevor der Merge Request rausgeht</span><span class="en">check security, code style and PHPStan before the merge request goes out</span></div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <header>
+          <h2><span class="de">Projekte</span><span class="en">Projects</span></h2>
+          <p><span class="de">Eigene Projekte neben der Arbeit. Bei „In Arbeit“ wird der Code gerade gebaut und folgt auf GitHub.</span><span class="en">Side projects outside work. Projects marked "In progress" are being built now; the code will follow on GitHub.</span></p>
+        </header>
+
+        <div class="subhead"><span class="de">Auf GitHub</span><span class="en">On GitHub</span></div>
+        <div class="projects">
+          <article class="proj">
+            <span class="status live"><span class="de">Öffentlich</span><span class="en">Public</span></span>
+            <h3><span class="de">Photovoltaik-Rechner</span><span class="en">Photovoltaic Calculator</span></h3>
+            <p><span class="de">Web-Prototyp, der den Ertrag einer PV-Anlage aus aktuellen Wetterdaten und den Bedingungen vor Ort berechnet.</span><span class="en">Web prototype that estimates the yield of a PV system from current weather data and local conditions.</span></p>
+            <div class="stack">JavaScript · Weather API</div>
+            <a class="repo" href="https://github.com/parth1320/photovoltaic-system" target="_blank" rel="noopener"><span class="de">Code ansehen →</span><span class="en">View code →</span></a>
+          </article>
+          <article class="proj">
+            <span class="status live"><span class="de">Öffentlich</span><span class="en">Public</span></span>
+            <h3>Video App Backend</h3>
+            <p><span class="de">Komplettes Backend für eine Video-Plattform nach dem Vorbild von YouTube.</span><span class="en">Complete back-end for a YouTube-style video platform.</span></p>
+            <div class="stack">Node.js · Express · MongoDB</div>
+            <a class="repo" href="https://github.com/parth1320/video_app_backend" target="_blank" rel="noopener"><span class="de">Code ansehen →</span><span class="en">View code →</span></a>
+          </article>
+          <article class="proj">
+            <span class="status live"><span class="de">Öffentlich</span><span class="en">Public</span></span>
+            <h3>eComm Laravel</h3>
+            <p><span class="de">Online-Shop mit Produktkatalog und Warenkorb, gebaut mit Laravel.</span><span class="en">Online shop with product catalogue and cart, built with Laravel.</span></p>
+            <div class="stack">PHP · Laravel · MySQL</div>
+            <a class="repo" href="https://github.com/parth1320/eComm-Laravel" target="_blank" rel="noopener"><span class="de">Code ansehen →</span><span class="en">View code →</span></a>
+          </article>
+          <article class="proj">
+            <span class="status live"><span class="de">Öffentlich</span><span class="en">Public</span></span>
+            <h3>Storybook</h3>
+            <p><span class="de">App zum Teilen von Geschichten mit Login über Google OAuth2.</span><span class="en">Story-sharing app with Google OAuth2 login.</span></p>
+            <div class="stack">Node.js · Express · Passport · OAuth2</div>
+            <a class="repo" href="https://github.com/parth1320/Storybook" target="_blank" rel="noopener"><span class="de">Code ansehen →</span><span class="en">View code →</span></a>
+          </article>
+        </div>
+
+        <div class="subhead"><span class="de">In Arbeit</span><span class="en">In progress</span></div>
+        <div class="projects">
+          <article class="proj">
+            <span class="status wip"><span class="de">In Arbeit</span><span class="en">In progress</span></span>
+            <h3>Solar Yield Platform</h3>
+            <p><span class="de">Plattform zur Verwaltung von PV-Anlagen und Ertragsprognose aus Live-Wetter- und Einstrahlungsdaten, mit PDF-Berichten und CI/CD.</span><span class="en">Platform to manage PV systems and forecast yield from live weather and irradiance data, with PDF reports and CI/CD.</span></p>
+            <div class="stack">TypeScript · Next.js · NestJS · PostgreSQL · Docker</div>
+          </article>
+          <article class="proj">
+            <span class="status wip"><span class="de">In Arbeit</span><span class="en">In progress</span></span>
+            <h3>AI Document Assistant (RAG)</h3>
+            <p><span class="de">Fragen zu deutschen Verwaltungsdokumenten beantworten, mit Quellenangaben, Streaming und Kostenkontrolle.</span><span class="en">Answers questions about German administrative documents with source citations, streaming and cost controls.</span></p>
+            <div class="stack">Python · FastAPI · PostgreSQL + pgvector · React</div>
+          </article>
+          <article class="proj">
+            <span class="status wip"><span class="de">In Arbeit</span><span class="en">In progress</span></span>
+            <h3>Event-Driven Notification System</h3>
+            <p><span class="de">Microservices über Message Queues mit Retries, Dead-Letter-Handling und Monitoring-Dashboards.</span><span class="en">Microservices communicating over message queues with retries, dead-letter handling and monitoring dashboards.</span></p>
+            <div class="stack">Node.js · TypeScript · RabbitMQ · Prometheus · Grafana</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="education">
+        <header>
+          <h2><span class="de">Ausbildung</span><span class="en">Education</span></h2>
+        </header>
+        <div class="edu">
+          <article class="job">
+            <div class="when">10/2021 –<br><span class="de">heute</span><span class="en">present</span></div>
+            <div>
+              <h3>M.Sc. Web Engineering</h3>
+              <p class="org"><span class="de">Technische Universität Chemnitz</span><span class="en">Chemnitz University of Technology</span></p>
+              <p style="margin:0"><span class="de">Masterarbeit eingereicht (09/2026), Verteidigung ausstehend:</span><span class="en">Thesis submitted (09/2026), defense pending:</span> <span class="thesis">Automated Claim Verification for Knowledge Graph Question Answering</span></p>
+            </div>
+          </article>
+          <article class="job">
+            <div class="when">07/2016 –<br>08/2020</div>
+            <div>
+              <h3>B.E. Computer Engineering</h3>
+              <p class="org">Government Engineering College, <span class="de">Indien</span><span class="en">India</span> · <span class="de">Note 2,0 (deutsches Äquivalent)</span><span class="en">Grade 2.0 (German equivalent)</span></p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <h2><span class="de">Lassen Sie uns sprechen.</span><span class="en">Let's talk.</span></h2>
+      <p><span class="de">Ich suche eine Vollzeitstelle als Softwareentwickler, gerne in Erfurt und Umgebung oder remote. Ich freue mich über Ihre Nachricht.</span><span class="en">I'm looking for a full-time software developer role, ideally in or around Erfurt, or remote. I'd be glad to hear from you.</span></p>
+      <div class="links">
+        <a href="https://linkedin.com/in/parth--kakadiya" target="_blank" rel="noopener">LinkedIn →</a>
+        <a href="https://github.com/parth1320" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+    <div class="mailbox">
+      <code id="email">parthkakadiya320@gmail.com</code>
+      <button class="btn primary" type="button" id="copy-email"><span class="de">Kopieren</span><span class="en">Copy</span></button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Parth Kakadiya · Erfurt</div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  function setLang(lang) {
+    root.setAttribute('data-lang', lang);
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-set-lang') === lang));
+    });
+    try { localStorage.setItem('pk-lang', lang); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('pk-lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'de');
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); });
+  });
+
+  var copyBtn = document.getElementById('copy-email');
+  var email = document.getElementById('email');
+  copyBtn.addEventListener('click', function () {
+    var de = root.getAttribute('data-lang') !== 'en';
+    function done(ok) {
+      copyBtn.innerHTML = ok ? (de ? 'Kopiert' : 'Copied') : (de ? 'Markiert' : 'Selected');
+      setTimeout(function () { copyBtn.innerHTML = '<span class="de">Kopieren</span><span class="en">Copy</span>'; }, 1800);
+    }
+    function selectText() {
+      var r = document.createRange(); r.selectNodeContents(email);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      done(false);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email.textContent).then(function () { done(true); }, selectText);
+    } else { selectText(); }
+  });
+})();
+</script>
+</body>
+</html>
